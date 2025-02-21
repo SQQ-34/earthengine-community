@@ -110,15 +110,15 @@ wavelength range they represent.
 // Function to get and rename bands of interest from OLI.
 function renameOli(img) {
   return img.select(
-      ['B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'pixel_qa'],
-      ['Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'pixel_qa']);
+      ['SR_B2', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B6', 'SR_B7', 'QA_PIXEL'],
+      ['Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'QA_PIXEL']);
 }
 
 // Function to get and rename bands of interest from ETM+.
 function renameEtm(img) {
   return img.select(
-      ['B1', 'B2', 'B3', 'B4', 'B5', 'B7', 'pixel_qa'],
-      ['Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'pixel_qa']);
+      ['SR_B1', 'SR_B2', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B7', 'QA_PIXEL'],
+      ['Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'QA_PIXEL']);
 }
 ```
 
@@ -133,7 +133,7 @@ function etmToOli(img) {
       .add(coefficients.itcps)
       .round()
       .toShort()
-      .addBands(img.select('pixel_qa'));
+      .addBands(img.select('QA_PIXEL'));
 }
 ```
 
@@ -148,7 +148,7 @@ pixels identified as cloud and cloud shadow to null.
 function fmask(img) {
   var cloudShadowBitMask = 1 << 3;
   var cloudsBitMask = 1 << 5;
-  var qa = img.select('pixel_qa');
+  var qa = img.select('QA_PIXEL');
   var mask = qa.bitwiseAnd(cloudShadowBitMask)
                  .eq(0)
                  .and(qa.bitwiseAnd(cloudsBitMask).eq(0));
@@ -239,16 +239,16 @@ section of the Developer Guide for more information.
 #### Retrieve Landsat sensor collections
 
 Get Landsat USGS surface reflectance collections for
-[OLI](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C01_T1_SR),
-[ETM+](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LE07_C01_T1_SR), and
-[TM](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LT05_C01_T1_SR).
+[OLI](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C02_T1_L2),
+[ETM+](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LE07_C02_T1_L2), and
+[TM](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LT05_C02_T1_L2).
 
 Visit the links to learn more about each dataset.
 
 ```js
-var oliCol = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR');
-var etmCol = ee.ImageCollection('LANDSAT/LE07/C01/T1_SR');
-var tmCol = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR');
+var oliCol = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2');
+var etmCol= ee.ImageCollection('LANDSAT/LE07/C02/T1_L2');
+var tmCol= ee.ImageCollection('LANDSAT/LT05/C02/T1_L2');
 ```
 
 #### Define an image collection filter
